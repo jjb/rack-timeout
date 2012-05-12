@@ -13,8 +13,12 @@ module Rack
     end
 
     def call(env)
-      SystemTimer.timeout(self.class.timeout, ::Timeout::Error) { @app.call(env) }
+      SystemTimer.timeout(self.class.timeout, Rack::Timeout::AppTimeout) {
+        @app.call(env)
+      }
     end
+
+    class AppTimeout < ::Timeout::Error; end
 
   end
 end
