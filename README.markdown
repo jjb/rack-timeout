@@ -1,45 +1,67 @@
 Rack::Timeout
 =============
 
-Abort requests that are taking too long; a Timeout::Error will be raised.
+Abort requests that are taking too long; a 504 will be returned to the user
+and their browser will be told to refresh after 10 seconds.
 
 
 Usage
 -----
 
-### Rails 3
+### Installation
 
-    # Gemfile
-    gem "rack-timeout"
+You will almost certainly want to make Rack::Timeout the very first middleware.
+(The only thing that you might possibly want to put before it is an
+exception/error reporter).
 
+```ruby
+# config.ru
+require 'rack/timeout'
+use Rack::Timeout
+# ... configuration (see below for options) ...
+# ... other middleware ...
+run MyApp::Application # if it's a Rails app
+```
 
-### Sinatra and other Rack apps
+### Configuration
 
-    # config.ru
-    require 'rack/timeout'
-    use Rack::Timeout
-    Rack::Timeout.timeout = 10  # this line is optional. if omitted, default is 15 seconds.
+Changing the timeout time (default is 15)
 
+```ruby
+Rack::Timeout.timeout = 25
+```
 
-### Setting a custom timeout for Rails apps
+Setting a custom handler to report timeouts
 
-    # config/initializers/timeout.rb
-    Rack::Timeout.timeout = 10  # seconds
+```ruby
+Rack::Timeout.reporter = lambda{ |exception, env|
+  ::Exceptional::Catcher.handle_with_rack(exception, env, Rack::Request.new(env))
+}
+```
 
+Specifying a custom error page and title
 
-### Setting a custom handler to report timeouts
+```ruby
+Rack::Timeout.error_page = 'http://cdn.example.com/504.html'
+Rack::Timeout.error_title = "We're sorry :'-("
+```
 
-    # config/initializers/timeout.rb
-	Rack::Timeout.reporter = lambda{ |exception, env|
-	  ::Exceptional::Catcher.handle_with_rack(exception, env, Rack::Request.new(env))
-	}
+### Rails 3 app with automatic middlware injection (not recommend)
 
-### Specifying a custom error page and title
+If you use the automatic injection, you can't control where it is injected into the
+stack (we could to some extent, but we can't guarantee that it is the very first
+middleware).
 
-    # config/initializers/timeout.rb
-	Rack::Timeout.error_page = 'http://cdn.example.com/504.html'
-	Rack::Timeout.error_title = 'We're sorry :'-('
+```ruby
+# Gemfile
+gem "rack-timeout"
 
+# application.rb
+RACK_TIMEOUT_AUTOINJECT = true
+
+# config/initializers/timeout.rb
+Rack::Timeout.timeout = 10
+```
 
 ### Here be dragons
 
