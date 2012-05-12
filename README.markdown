@@ -42,6 +42,13 @@ Usage
 	  ::Exceptional::Catcher.handle_with_rack(exception, env, Rack::Request.new(env))
 	}
 
+### Specifying a custom error page and title
+
+    # config/initializers/timeout.rb
+	Rack::Timeout.error_page = 'http://cdn.example.com/504.html'
+	Rack::Timeout.error_title = 'We're sorry :'-('
+
+
 ### Here be dragons
 
 SystemTimer/timeout rely on threads. If your app or any of the libraries it depends on is
