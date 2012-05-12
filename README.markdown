@@ -41,7 +41,7 @@ run MyApp::Application # if it's a Rails app
 Changing the timeout time (default is 15)
 
 ```ruby
-Rack::Timeout.timeout = 25
+Rack::Timeout.time = 25
 ```
 
 Setting a custom handler to report timeouts
@@ -73,7 +73,7 @@ gem "rack-timeout"
 RACK_TIMEOUT_AUTOINJECT = true
 
 # config/initializers/timeout.rb
-Rack::Timeout.timeout = 10
+Rack::Timeout.time = 10
 ```
 
 ### Here be dragons

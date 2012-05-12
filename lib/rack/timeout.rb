@@ -11,7 +11,7 @@ module Rack
     @error_page = nil
     @error_title = 'sorry.'
     class << self
-      attr_accessor :timeout, :reporter, :error_page, :error_title
+      attr_accessor :time, :reporter, :error_page, :error_title
     end
 
     def initialize(app)
@@ -20,7 +20,7 @@ module Rack
 
     def call(env)
       begin
-        ::Timeout.timeout(self.class.timeout, Rack::Timeout::AppTimeout) {
+        ::Timeout.timeout(self.class.time, Rack::Timeout::AppTimeout) {
           @app.call(env)
         }
       rescue Rack::Timeout::AppTimeout
