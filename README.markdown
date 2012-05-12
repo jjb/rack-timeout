@@ -55,7 +55,7 @@ Rack::Timeout.reporter = lambda{ |exception, env|
 Specifying a custom error page and title
 
 ```ruby
-Rack::Timeout.error_page = 'http://cdn.example.com/504.html'
+Rack::Timeout.error_page = 'http://cdn.example.com/503.html'
 Rack::Timeout.error_title = "We're sorry :'-("
 ```
 

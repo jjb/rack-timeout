@@ -26,7 +26,7 @@ module Rack
       rescue Rack::Timeout::AppTimeout
         self.class.reporter.call($!, env)
         if self.class.error_page
-          [ 504, {
+          [ 503, {
             "Refresh" => "10",
             "Content-Type" => "text/html; charset=utf-8"
           }, [<<-HTML
@@ -42,7 +42,7 @@ module Rack
 HTML
           ]]
         else
-          [ 504, {
+          [ 503, {
             "Refresh" => "10",
             "Content-Type" => "text/plain; charset=utf-8"
           }, [<<-CUTE
