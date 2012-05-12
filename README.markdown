@@ -59,7 +59,7 @@ Rack::Timeout.error_page = 'http://cdn.example.com/503.html'
 Rack::Timeout.error_title = "We're sorry :'-("
 ```
 
-### Rails 3 app with automatic middlware injection (not recommend)
+### Rails 3 app with automatic middleware injection (not recommend)
 
 If you use the automatic injection, you can't control where it is injected into the
 stack (we could to some extent, but we can't guarantee that it is the very first
@@ -75,6 +75,20 @@ RACK_TIMEOUT_AUTOINJECT = true
 # config/initializers/timeout.rb
 Rack::Timeout.time = 10
 ```
+
+### Testing in dev mode
+
+If you want to test the behavior of your config in dev mode, you will
+have to remove any exception-handleing middlewares below AND above where
+rack-timeout is insert. Rails example:
+
+```ruby
+config.middleware.delete ActionDispatch::DebugExceptions
+config.middleware.delete ActionDispatch::ShowExceptions
+```
+
+Now you can put `sleep 30` in a controller action and see what happens when
+you visit it.
 
 ### Here be dragons
 
