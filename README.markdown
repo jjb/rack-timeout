@@ -83,6 +83,7 @@ not thread-safe, you may run into issues using rack-timeout.
 
 ### TODO
 
+* tidier configuration system
 * Figure out who made the text failwhale and give attribution.
 
 ---
