@@ -21,7 +21,7 @@ module Rack
     def call(env)
       begin
         ::Timeout.timeout(self.class.time, Rack::Timeout::AppTimeout) {
-          @app.call(env)
+          Thread.new{ @app.call(env) }.value
         }
       rescue Rack::Timeout::AppTimeout
         self.class.reporter.call($!, env)
