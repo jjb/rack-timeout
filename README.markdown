@@ -35,6 +35,13 @@ Usage
     Rack::Timeout.timeout = 10  # seconds
 
 
+### Setting a custom handler to report timeouts
+
+    # config/initializers/timeout.rb
+	Rack::Timeout.reporter = lambda{ |exception, env|
+	  ::Exceptional::Catcher.handle_with_rack(exception, env, Rack::Request.new(env))
+	}
+
 ### Here be dragons
 
 SystemTimer/timeout rely on threads. If your app or any of the libraries it depends on is

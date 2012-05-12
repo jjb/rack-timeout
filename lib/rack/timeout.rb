@@ -5,8 +5,12 @@ SystemTimer ||= Timeout
 module Rack
   class Timeout
     @timeout = 15
+    @reporter = lambda do |exception, env|
+      puts env.inspect
+      puts exception.inspect
+    end
     class << self
-      attr_accessor :timeout
+      attr_accessor :timeout, :reporter
     end
 
     def initialize(app)
@@ -19,6 +23,7 @@ module Rack
           @app.call(env)
         }
       rescue Rack::Timeout::AppTimeout
+        self.class.reporter.call($!, env)
         [ 504, {
           "Refresh" => "10",
           "Content-Type" => "text/plain; charset=utf-8"
