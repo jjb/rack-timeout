@@ -1,9 +1,22 @@
 Rack::Timeout
 =============
 
-Abort requests that are taking too long; a 504 will be returned to the user
-and their browser will be told to refresh after 10 seconds.
+```ruby
+<<-CUTE
+▄██████████████▄▐█▄▄▄▄█▌
+██████▌▄▌▄▐▐▌███▌▀▀██▀▀
+████▄█▌▄▌▄▐▐▌▀███▄▄█▌
+▄▄▄▄▄██████████████▀
 
+Our systems are over
+capacity and could not
+complete your requeset.
+
+Your browser will
+automatically try again
+in 10 seconds.
+CUTE
+```
 
 Usage
 -----
@@ -68,6 +81,9 @@ Rack::Timeout.timeout = 10
 Ruby Timeout relies on threads. If your app or any of the libraries it depends on is
 not thread-safe, you may run into issues using rack-timeout.
 
+### TODO
+
+* Figure out who made the text failwhale and give attribution.
 
 ---
 Copyright © 2012 John Bachir  
