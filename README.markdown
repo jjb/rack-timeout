@@ -7,18 +7,10 @@ Abort requests that are taking too long; a Timeout::Error will be raised.
 Usage
 -----
 
-### Rails 3 app or Rails 2.3 app with Bundler
+### Rails 3
 
     # Gemfile
-    gem "SystemTimer", :require => "system_timer", :platforms => :ruby_18
     gem "rack-timeout"
-
-
-### Rails 2.3 app without Bundler
-
-    # config/environment.rb
-    config.gem "SystemTimer", :lib => "system_timer" if RUBY_VERSION < "1.9"
-    config.gem "rack-timeout"
 
 
 ### Sinatra and other Rack apps
@@ -51,7 +43,7 @@ Usage
 
 ### Here be dragons
 
-SystemTimer/timeout rely on threads. If your app or any of the libraries it depends on is
+Ruby Timeout relies on threads. If your app or any of the libraries it depends on is
 not thread-safe, you may run into issues using rack-timeout.
 
 

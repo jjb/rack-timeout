@@ -1,6 +1,5 @@
 # encoding: UTF-8
-require RUBY_VERSION < '1.9' ? 'system_timer' : 'timeout'
-SystemTimer ||= Timeout
+require 'timeout'
 
 module Rack
   class Timeout
@@ -21,7 +20,7 @@ module Rack
 
     def call(env)
       begin
-        SystemTimer.timeout(self.class.timeout, Rack::Timeout::AppTimeout) {
+        ::Timeout.timeout(self.class.timeout, Rack::Timeout::AppTimeout) {
           @app.call(env)
         }
       rescue Rack::Timeout::AppTimeout
