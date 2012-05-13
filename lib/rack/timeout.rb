@@ -3,6 +3,8 @@ require 'timeout'
 
 module Rack
   class Timeout
+    class AppTimeout < ::Timeout::Error; end
+
     @timeout = 15
     @reporter = lambda do |exception, env|
       puts env.inspect
@@ -25,27 +27,23 @@ module Rack
         }
       rescue Rack::Timeout::AppTimeout
         self.class.reporter.call($!, env)
+
         if self.class.error_page
-          [ 503, {
-            "Refresh" => "10",
-            "Content-Type" => "text/html; charset=utf-8"
-          }, [<<-HTML
-<!DOCTYPE html>
-<head>
-  <title>#{self.class.error_title}</title>
-</head>
-<body>
-  <iframe width="100%" height="1600" scrolling="no" frameborder="0"
-          src="#{self.class.error_page}">
-  </iframe>
-</body>
-HTML
-          ]]
+          html_response
         else
-          [ 503, {
-            "Refresh" => "10",
-            "Content-Type" => "text/plain; charset=utf-8"
-          }, [<<-CUTE
+          text_response
+        end
+      end
+
+    end
+
+    private
+
+    def text_response
+      [ 503, {
+        "Refresh" => "10",
+        "Content-Type" => "text/plain; charset=utf-8"
+      }, [<<-CUTE
 ▄██████████████▄▐█▄▄▄▄█▌
 ██████▌▄▌▄▐▐▌███▌▀▀██▀▀
 ████▄█▌▄▌▄▐▐▌▀███▄▄█▌
@@ -59,13 +57,27 @@ Your browser will
 automatically try again
 in 10 seconds.
 CUTE
-          ]]
-        end
-      end
-
+      ]]      
     end
 
-    class AppTimeout < ::Timeout::Error; end
+    def html_response
+      [ 503, {
+        "Refresh" => "10",
+        "Content-Type" => "text/html; charset=utf-8"
+      }, [<<-HTML
+<!DOCTYPE html>
+<head>
+  <title>#{self.class.error_title}</title>
+</head>
+<body>
+  <iframe width="100%" height="1600" scrolling="no" frameborder="0"
+          src="#{self.class.error_page}">
+  </iframe>
+</body>
+HTML
+      ]]
+    end
+
 
   end
 end
