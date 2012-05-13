@@ -21,9 +21,11 @@ module Rack
     end
 
     def call(env)
+      t = nil
       begin
         ::Timeout.timeout(self.class.time, Rack::Timeout::AppTimeout) {
-          Thread.new{ @app.call(env) }.value
+          t = Thread.new{ @app.call(env) }
+          t.value
         }
       rescue Rack::Timeout::AppTimeout
         self.class.reporter.call($!, env)
@@ -33,6 +35,12 @@ module Rack
         else
           text_response
         end
+      ensure
+        # This is what Timeout.timeout does. I guess that means it's the
+        # safest method. I don't know why join would ever be needed
+        # after kill.
+        t.kill
+        t.join
       end
 
     end
