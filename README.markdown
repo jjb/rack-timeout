@@ -40,7 +40,7 @@ run MyApp::Application # if it's a Rails app
 
 ```ruby
 # Gemfile
-gem "rack-timeout"
+gem "rack-timeout", github: 'ganxy/rack-timeout'
 
 # config/initializers/timeout.rb
 Rack::Timeout.time = 10
