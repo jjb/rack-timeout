@@ -1,3 +1,5 @@
+**note: This branch is not yet ready for use. It has a memory leak that needs to be investigated when I have time. --@jjb**
+
 Rack::Timeout
 =============
 
